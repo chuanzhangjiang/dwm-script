@@ -6,4 +6,5 @@
 # compton -b
 xcompmgr &
 # 设置背景图片
-feh --bg-fill Pictures/20190421115547809.jpg 
+feh -r --bg-max Pictures/Wallpapers/
+
