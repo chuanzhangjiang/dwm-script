@@ -1,12 +1,14 @@
 #!/bin/bash
 
-first_level=25
+first_level=20
 
-second_level=15
+second_level=10
 
 first_level_sounds_played=false
 
 second_level_sounds_played=false
+
+sound_dir="~/.dwm/voice/no-power.wav"
 
 get_battery_combined_percent() {
 
@@ -41,7 +43,7 @@ do
 	if [ $first_level_sounds_played == false ]
 	then
     	    first_level_sounds_played=true
-	    eval "aplay voice/no-power.wav"
+	    eval "aplay $sound_dir"
 	fi
 	second_level_sounds_played=false
     elif [ $level == 2 ]
@@ -49,7 +51,7 @@ do
 	if [ $second_level_sounds_played == false ]
 	then
     	    second_level_sounds_played=true
-	    eval "aplay voice/no-power.wav"
+	    eval "aplay $sound_dir"
 	fi
 	first_level_sounds_played=false
     else
