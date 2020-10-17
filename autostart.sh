@@ -11,6 +11,8 @@ feh -r --bg-fill ~/Pictures/Wallpapers/
 # 加载透明背景控件
 compton -b
 # xcompmgr &
+# 开启数字键盘
+numlockx on
 # 启动st
 st
 
