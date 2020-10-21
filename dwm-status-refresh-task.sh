@@ -3,5 +3,5 @@
 while true
 do
     bash ~/.dwm/dwm-status-show-tool.sh
-    sleep 2
+    sleep 1
 done

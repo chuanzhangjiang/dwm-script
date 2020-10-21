@@ -58,5 +58,5 @@ do
 	first_level_sounds_played=false
 	second_level_sounds_played=false
     fi
-    sleep 2
+    sleep 60
 done

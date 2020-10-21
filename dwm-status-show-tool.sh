@@ -5,11 +5,11 @@
 # This function parses /proc/net/dev file searching for a line containing $interface data.
 # Within that line, the first and ninth numbers after ':' are respectively the received and transmited bytes.
 function get_bytes {
-	# Find active network interface
-	interface=$(ip route get 8.8.8.8 2>/dev/null| awk '{print $5}')
-	line=$(grep $interface /proc/net/dev | cut -d ':' -f 2 | awk '{print "received_bytes="$1, "transmitted_bytes="$9}')
-	eval $line
-	now=$(date +%s%N)
+    # Find active network interface
+    interface=$(ip route get 8.8.8.8 2>/dev/null| awk '{print $5}')
+    line=$(grep $interface /proc/net/dev | cut -d ':' -f 2 | awk '{print "received_bytes="$1, "transmitted_bytes="$9}')
+    eval $line
+    now=$(date +%s%N)
 }
 
 # Function which calculates the speed using actual and old byte number.
@@ -32,10 +32,10 @@ function get_velocity {
 }
 
 # Get initial values
-get_bytes
-old_received_bytes=$received_bytes
-old_transmitted_bytes=$transmitted_bytes
-old_time=$now
+# get_bytes
+# old_received_bytes=$received_bytes
+# old_transmitted_bytes=$transmitted_bytes
+# old_time=$now
 
 print_volume() {
 	status="$(amixer get Master | sed -n '$p' | cut -d] -f3 | cut -d[ -f2)"
@@ -50,7 +50,7 @@ print_mem(){
 
 print_temp(){
 	test -f /sys/class/thermal/thermal_zone0/temp || return 0
-	echo $(head -c 2 /sys/class/thermal/thermal_zone0/temp)C
+	echo $(head -c 2 /sys/class/thermal/thermal_zone0/temp)°C
 }
 
 #!/bin/bash
@@ -88,11 +88,9 @@ get_battery_charging_status() {
 
 	if $(acpi -b | grep --quiet Discharging)
 	then
-		# echo "🔋";
-        echo "Bat."
+	    echo "🔋";
 	else # acpi can give Unknown or Charging if charging, https://unix.stackexchange.com/questions/203741/lenovo-t440s-battery-status-unknown-but-charging
-		# echo "🔌";
-        echo "Char."
+	    echo "🔌";
 	fi
 }
 
@@ -139,27 +137,28 @@ export IDENTIFIER="unicode"
 #. "$DIR/dwmbar-functions/dwm_battery.sh"
 #. "$DIR/dwmbar-functions/dwm_mail.sh"
 #. "$DIR/dwmbar-functions/dwm_backlight.sh"
-#. "$DIR/dwmbar-functions/dwm_alsa.sh"
+. "$DIR/dwmbar-functions/dwm_alsa.sh"
 #. "$DIR/dwmbar-functions/dwm_pulse.sh"
 #. "$DIR/dwmbar-functions/dwm_weather.sh"
 #. "$DIR/dwmbar-functions/dwm_vpn.sh"
 #. "$DIR/dwmbar-functions/dwm_network.sh"
 #. "$DIR/dwmbar-functions/dwm_keyboard.sh"
 #. "$DIR/dwmbar-functions/dwm_ccurse.sh"
-#. "$DIR/dwmbar-functions/dwm_date.sh"
+. "$DIR/dwmbar-functions/dwm_date.sh"
+. "$DIR/dwmbar-functions/net_type.sh"
 
-get_bytes
+# get_bytes
 
 # Calculates speeds
-vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
-vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
+# vel_recv=$(get_velocity $received_bytes $old_received_bytes $now)
+# vel_trans=$(get_velocity $transmitted_bytes $old_transmitted_bytes $now)
 
 # xsetroot -name "  💿 $(print_mem)M ⬇️ $vel_recv ⬆️ $vel_trans $(dwm_alsa) [ $(print_bat) ]$(show_record) $(print_date) "
-xsetroot -name " ⬇️$vel_recv ⬆️$vel_trans | $(print_volume) | $(print_bat) | $(print_date) "
+xsetroot -name "[$(print_net_type)] $(dwm_alsa)| $(print_bat) | $(print_temp) | $(dwm_date) "
 
 # Update old values to perform new calculations
-old_received_bytes=$received_bytes
-old_transmitted_bytes=$transmitted_bytes
-old_time=$now
+#old_received_bytes=$received_bytes
+#old_transmitted_bytes=$transmitted_bytes
+#old_time=$now
 
 exit 0
